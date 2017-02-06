@@ -52,7 +52,13 @@ let kill procId =
 
 let mono args = execProcAndReturnMessages "mono" args
 
-let dotnet args = execProcAndReturnMessages "dotnet" args
+let dotnetSDKPath = System.Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) </> "dotnetcore" |> FullName
+
+let dotnetExePath =
+    dotnetSDKPath </> (if isWindows then "dotnet.exe" else "dotnet")
+    |> FullName
+
+let dotnet args = execProcAndReturnMessages dotnetExePath args
 
 
 let getProcessor () =
@@ -132,16 +138,14 @@ let msbuildAndRun useLLVM projName =
 
     startProc "mono" (args |> stringJoin " ") ""
     
-
+printf "%s\n" dotnetExePath
 let dotnetRestore projFile =    
-    DotNetCli.Restore (fun c ->
-        { c with
-            Project = projFile
-        })
+    let args = "restore"  
+    startProc dotnetExePath args (Path.GetDirectoryName projFile)
 
-let dotnetrun project =
-    let args = sprintf "run --configuration Release --project %s"  project
-    startProc "dotnet" args ""
+let dotnetrun projFile =
+    let args = sprintf "run --configuration Release --project %s" projFile
+    startProc dotnetExePath args (Path.GetDirectoryName projFile)
 
 let dotnetBuildAndRun projName =
     projName |> getProjFile |> dotnetRestore
@@ -235,37 +239,39 @@ type Framework =
 
 let projects =
     [
-       Full "KatanaPlain"
-       FullLLVM "KatanaPlain"
+    //    Full "KatanaPlain"
+    //    FullLLVM "KatanaPlain"
 
-       Full "WebApiOnKatana"   
-       FullLLVM "WebApiOnKatana"
+        Full "WebApiOnKatana"   
+        Full "WebApiOnNowin"   
+    //    FullLLVM "WebApiOnKatana"
 
-       Full "NancyOnKatana"
-       FullLLVM "NancyOnKatana"
+    //    Full "NancyOnKatana"
+    //    FullLLVM "NancyOnKatana"
        
-       Full "FreyaOnKatana"
-       FullLLVM "FreyaOnKatana"
+        Full "FreyaOnKatana"
+    //    FullLLVM "FreyaOnKatana"
 
 
-       Full "NowinOnMono"
-       FullLLVM "NowinOnMono"
+    //    Full "NowinOnMono"
+    //    FullLLVM "NowinOnMono"
 
-       Full "NancyOnNowin" //Can't seem to handle the load
-       FullLLVM "NancyOnNowin" //Can't seem to handle the load
+    //    Full "NancyOnNowin" //Can't seem to handle the load
+    //    FullLLVM "NancyOnNowin" //Can't seem to handle the load
 
-       Full "SuaveOnMono"
-       FullLLVM "SuaveOnMono"
+        Full "SuaveOnMono"
+    //    FullLLVM "SuaveOnMono"
 
-       Full "NancyOnSuave"
-       FullLLVM "NancyOnSuave"
+    //    Full "NancyOnSuave"
+    //    FullLLVM "NancyOnSuave"
 
-       Core "KestrelPlain"
-       Core "MvcOnKestrel"
-       Core "NancyOnKestrel"
-       Core "SuaveOnKestrel"
-       Core "SuaveOnCoreCLR"
-        // Core "FreyaOnKestrel" // does not work on osx/linux -- curl: (18) transfer closed with outstanding read data remaining
+    //    Core "KestrelPlain"
+    //    Core "MvcOnKestrel"
+    //    Core "NancyOnKestrel"
+    //    Core "SuaveOnKestrel"
+    //    Core "SuaveOnCoreCLR"
+    //     Full "FreyaOnKestrel" // does not work on osx/linux -- curl: (18) transfer closed with outstanding read data remaining
+        Full "FreyaOnNowin" 
     ]
 let writeToFile filePath str =
     System.IO.File.WriteAllText(filePath, str)

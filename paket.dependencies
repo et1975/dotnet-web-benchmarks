@@ -1,9 +1,14 @@
 source https://www.nuget.org/api/v2
 framework: >= net45
 nuget FAKE
+nuget Freya.Core 3.0.0-rc07
 nuget Freya 3.0.0-rc01
+nuget Freya.Polyfills.Kestrel
 nuget FSharp.Core
+nuget Libuv
 nuget Microsoft.AspNet.WebApi.OwinSelfHost
+nuget Microsoft.AspNetCore.Owin
+nuget Microsoft.AspNetCore.Server.Kestrel
 nuget Nancy.Owin
 nuget Suave
 nuget Microsoft.Owin.Hosting

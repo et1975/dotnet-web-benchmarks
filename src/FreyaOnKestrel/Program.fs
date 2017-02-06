@@ -5,6 +5,7 @@ open Freya.Machines.Http
 open Freya.Routers.Uri.Template
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
+open Microsoft.AspNetCore.Owin
 
 module App =
   let hello =
@@ -30,7 +31,7 @@ module App =
   [<EntryPoint>]
   let main _ =
     WebHostBuilder()
-        .UseUrls("http://localhost:8083")
+        .UseUrls("http://0.0.0.0:8083")
         .UseKestrel()
         .UseStartup<Startup>()
         .Build()

@@ -1,0 +1,5 @@
+Freya
+Microsoft.AspNetCore.Server.Kestrel
+Freya.Polyfills.Kestrel
+Microsoft.AspNetCore.Owin
+Libuv
